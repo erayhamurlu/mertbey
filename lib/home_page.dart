@@ -1,8 +1,12 @@
+import 'dart:math';
+
 import 'package:flushbar/flushbar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_list_drag_and_drop/drag_and_drop_list.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:trellocards/card_information_page.dart';
 import 'package:trellocards/model/cardModel.dart';
 import 'package:trellocards/service/database_service.dart';
 
@@ -342,30 +346,26 @@ class _HomePageState extends State<HomePage> {
                 separatorBuilder: (BuildContext context, int index) {
                   return SizedBox(height: 10);
                 },
-                itemCount: 5,
+                itemCount: 4,
                 itemBuilder: (context, index) {
                   return TextFormField(
                     onChanged: (entered) {
                       index == 0
                           ? teknikUzman = entered
                           : index == 1
-                              ? tahminiSure = entered
+                              ? gerceklesenSure = entered
                               : index == 2
-                                  ? gerceklesenSure = entered
-                                  : index == 3
-                                      ? isinAciklamasi = entered
-                                      : notlar = entered;
+                                  ? isinAciklamasi = entered
+                                  : notlar = entered;
                     },
                     decoration: InputDecoration(
                       hintText: index == 0
                           ? "Teknik Uzman"
                           : index == 1
-                              ? "Tahmini Süre"
+                              ? "Gerçekleşen Süre"
                               : index == 2
-                                  ? "Gerçekleşen Süre"
-                                  : index == 3
-                                      ? "İşin Açıklaması"
-                                      : "Notlar",
+                                  ? "İşin Açıklaması"
+                                  : "Notlar",
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(color: Color(0xff3daecc))),
@@ -398,7 +398,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 color: Colors.lightGreen,
                 onPressed: () {
-                  setState(() async {
+                  setState(() {
                     saveInformation(index, which, id);
                     setState(() {
                       getLists();
@@ -413,6 +413,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   void saveInformation(int index, String which, int id) async {
+    var rng = Random();
+    var tahminiSure = rng.nextInt(10) + 1;
+
     if (teknikUzman == null || isinAciklamasi == null || tahminiSure == null || notlar == null) {
       _snackbar("Please fill all!", Colors.red);
     } else {
@@ -420,7 +423,7 @@ class _HomePageState extends State<HomePage> {
       CardModel cardModel = CardModel(
         teknikUzman: teknikUzman,
         taskId: index,
-        tahminiSure: tahminiSure,
+        tahminiSure: tahminiSure.toString(),
         gerceklesenSure: gerceklesenSure,
         isinAciklamasi: isinAciklamasi,
         notlar: notlar,
@@ -481,20 +484,42 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         childWhenDragging: Container(),
-        child: Container(
-          height: 50,
-          //padding: const EdgeInsets.all(16.0),
-          color: Colors.greenAccent,
-          child: ListTile(
-            title: Text(childres[index][innerIndex].notlar),
-            trailing: IconButton(
-              icon: Icon(Icons.delete),
-              onPressed: () {
-                setState(() {
-                  deleteCard(childres[index][innerIndex].id);
-                  childres[0].removeAt(innerIndex);
-                });
-              },
+        child: GestureDetector(
+          onTap: () => Navigator.push(
+              context,
+              CupertinoPageRoute(
+                  builder: (context) =>
+                      CardInformationPage(index: (childres[index][innerIndex].id - 1)))),
+          child: Container(
+            height: 50,
+            color: Colors.greenAccent,
+            child: ListTile(
+              title: Text(childres[index][innerIndex].notlar),
+              trailing: Container(
+                width: 50,
+                child: Row(children: [
+                  Expanded(
+                    child: IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        setState(() {
+                          deleteCard(childres[index][innerIndex].id);
+                          childres[0].removeAt(innerIndex);
+                        });
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: IconButton(
+                      icon: Icon(Icons.update),
+                      onPressed: () {
+                        showCustomDialog(childres[index][innerIndex].taskId, "update",
+                            childres[index][innerIndex].id);
+                      },
+                    ),
+                  ),
+                ]),
+              ),
             ),
           ),
         ),
