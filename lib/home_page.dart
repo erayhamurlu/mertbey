@@ -11,14 +11,28 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    getLists();
+    super.initState();
+  }
+
+  void getLists() async {
+    childres[0] = await getCardList(0);
+    setState(() {
+      childres[0];
+    });
+  }
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   List<String> cards = ["ToDo", "Completed"];
   List<List<CardModel>> childres = [
+    [],
+    [],
     //["ToDo 1", "ToDo 2"],
     //["Done 1", "Done 2"],
   ];
-  List<CardModel> lastModel;
 
   String teknikUzman;
   String tahminiSure;
@@ -194,27 +208,27 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Widget _buildAddCardTaskWidget(context, index) {
-  //   return Container(
-  //     margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-  //     child: InkWell(
-  //       onTap: () {
-  //         _showAddCardTask(index);
-  //       },
-  //       child: Row(
-  //         children: <Widget>[
-  //           Icon(
-  //             Icons.add,
-  //           ),
-  //           SizedBox(
-  //             width: 16.0,
-  //           ),
-  //           Text("Add Card Task"),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
+  Widget _buildAddCardTaskWidget(context, index) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+      child: InkWell(
+        onTap: () {
+          _showAddCardTask(index);
+        },
+        child: Row(
+          children: <Widget>[
+            Icon(
+              Icons.add,
+            ),
+            SizedBox(
+              width: 16.0,
+            ),
+            Text("Add Card Task"),
+          ],
+        ),
+      ),
+    );
+  }
 
   Widget _buildCard(BuildContext context, int index) {
     // return Container(
@@ -385,8 +399,9 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () {
                   setState(() async {
                     saveInformation(index, which, id);
-                    lastModel = await getCardList(index);
-                    debugPrint(lastModel.toString());
+                    setState(() {
+                      getLists();
+                    });
                     Navigator.pop(context);
                   });
                 },
