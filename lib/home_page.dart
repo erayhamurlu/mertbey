@@ -14,9 +14,9 @@ class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   List<String> cards = ["ToDo", "Completed"];
-  List<List<String>> childres = [
-    ["ToDo 1", "ToDo 2"],
-    ["Done 1", "Done 2"],
+  List<List<CardModel>> childres = [
+    //["ToDo 1", "ToDo 2"],
+    //["Done 1", "Done 2"],
   ];
   List<CardModel> lastModel;
 
@@ -118,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                   child: RaisedButton(
                     onPressed: () {
                       Navigator.of(context).pop();
-                      _addCardTask(index, _taskTextController.text.trim());
+                      //_addCardTask(index, _taskTextController.text.trim();
                     },
                     child: Text("Add Task"),
                   ),
@@ -129,11 +129,11 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
-  _addCardTask(int index, String text) {
-    childres[index].add(text);
-    _taskTextController.text = "";
-    setState(() {});
-  }
+  // _addCardTask(int index, String text) {
+  //   childres[index].add(text);
+  //   _taskTextController.text = "";
+  //   setState(() {});
+  // }
 
   _handleReOrder(int oldIndex, int newIndex, int index) {
     var oldValue = childres[index][oldIndex];
@@ -194,27 +194,27 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildAddCardTaskWidget(context, index) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-      child: InkWell(
-        onTap: () {
-          _showAddCardTask(index);
-        },
-        child: Row(
-          children: <Widget>[
-            Icon(
-              Icons.add,
-            ),
-            SizedBox(
-              width: 16.0,
-            ),
-            Text("Add Card Task"),
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget _buildAddCardTaskWidget(context, index) {
+  //   return Container(
+  //     margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+  //     child: InkWell(
+  //       onTap: () {
+  //         _showAddCardTask(index);
+  //       },
+  //       child: Row(
+  //         children: <Widget>[
+  //           Icon(
+  //             Icons.add,
+  //           ),
+  //           SizedBox(
+  //             width: 16.0,
+  //           ),
+  //           Text("Add Card Task"),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildCard(BuildContext context, int index) {
     // return Container(
@@ -256,7 +256,7 @@ class _HomePageState extends State<HomePage> {
                   child: SingleChildScrollView(
                     child: Container(
                       height: MediaQuery.of(context).size.height * 0.7,
-                      child: DragAndDropList<String>(
+                      child: DragAndDropList<CardModel>(
                         childres[index],
                         itemBuilder: (BuildContext context, item) {
                           return _buildCardTask(index, childres[index].indexOf(item));
@@ -450,14 +450,14 @@ class _HomePageState extends State<HomePage> {
             width: 284.0,
             padding: const EdgeInsets.all(16.0),
             color: Colors.greenAccent,
-            child: Text(childres[index][innerIndex]),
+            child: Text(childres[index][innerIndex].notlar),
           ),
         ),
         childWhenDragging: Container(),
         child: Container(
           padding: const EdgeInsets.all(16.0),
           color: Colors.greenAccent,
-          child: Text(childres[index][innerIndex]),
+          child: Text(childres[index][innerIndex].notlar),
         ),
         data: {"from": index, "string": childres[index][innerIndex]},
       ),
