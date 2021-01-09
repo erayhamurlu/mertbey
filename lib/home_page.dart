@@ -2,6 +2,7 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_list_drag_and_drop/drag_and_drop_list.dart';
 import 'package:provider/provider.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:trellocards/model/cardModel.dart';
 import 'package:trellocards/service/database_service.dart';
 
@@ -454,6 +455,17 @@ class _HomePageState extends State<HomePage> {
     )..show(_scaffoldKey.currentState.context);
   }
 
+  deleteCard(int index) async {
+    final instance = Provider.of<DatabaseService>(context, listen: false);
+    await instance.open();
+    print(index);
+    bool result = await instance.deleteCard(index);
+    if (result)
+      _snackbar("Card deleted", Colors.lightGreen);
+    else
+      _snackbar("The card could not be deleted!", Colors.red);
+  }
+
   Container _buildCardTask(int index, int innerIndex) {
     return Container(
       width: 300.0,
@@ -470,9 +482,21 @@ class _HomePageState extends State<HomePage> {
         ),
         childWhenDragging: Container(),
         child: Container(
-          padding: const EdgeInsets.all(16.0),
+          height: 50,
+          //padding: const EdgeInsets.all(16.0),
           color: Colors.greenAccent,
-          child: Text(childres[index][innerIndex].notlar),
+          child: ListTile(
+            title: Text(childres[index][innerIndex].notlar),
+            trailing: IconButton(
+              icon: Icon(Icons.delete),
+              onPressed: () {
+                setState(() {
+                  deleteCard(childres[index][innerIndex].id);
+                  childres[0].removeAt(innerIndex);
+                });
+              },
+            ),
+          ),
         ),
         data: {"from": index, "string": childres[index][innerIndex]},
       ),
