@@ -12,10 +12,16 @@ import 'package:trellocards/service/database_service.dart';
 
 class HomePage extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  HomePageState createState() => HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> {
+  int myCards = 0;
+
+  void addCard() => myCards++;
+
+  void deleteCards() => myCards--;
+
   @override
   void initState() {
     getLists();
@@ -50,7 +56,8 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text("Trello Cards"),
+        centerTitle: true,
+        title: Text("Trello"),
       ),
       body: _buildBody(),
     );
@@ -263,11 +270,13 @@ class _HomePageState extends State<HomePage> {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    cards[index],
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
+                  child: Center(
+                    child: Text(
+                      cards[index],
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
@@ -289,17 +298,23 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                FlatButton(
-                  onPressed: () => showCustomDialog(index, "add", 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.add),
-                      Text(
-                        "Add Card",
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ],
+                Padding(
+                  padding: EdgeInsets.all(15),
+                  child: FlatButton(
+                    //padding: EdgeInsets.all(15),
+                    color: Colors.red,
+                    onPressed: () => showCustomDialog(index, "add", 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.add, color: Colors.white),
+                        Text(
+                          "Add Card",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -377,7 +392,7 @@ class _HomePageState extends State<HomePage> {
             actions: [
               RaisedButton(
                 child: Text(
-                  "Kapat",
+                  "İptal",
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -396,7 +411,7 @@ class _HomePageState extends State<HomePage> {
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1),
                 ),
-                color: Colors.lightGreen,
+                color: Colors.green,
                 onPressed: () {
                   setState(() {
                     saveInformation(index, which, id);
@@ -479,7 +494,7 @@ class _HomePageState extends State<HomePage> {
           child: Container(
             width: 284.0,
             padding: const EdgeInsets.all(16.0),
-            color: Colors.greenAccent,
+            color: Colors.redAccent,
             child: Text(childres[index][innerIndex].notlar),
           ),
         ),

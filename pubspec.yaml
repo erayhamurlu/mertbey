@@ -30,8 +30,10 @@ dependencies:
   flushbar: ^1.10.4
   flutter_slidable: ^0.5.7
 dev_dependencies:
+  test: ^1.15.7
   flutter_test:
     sdk: flutter
+    
 
 
 
